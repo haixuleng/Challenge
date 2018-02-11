@@ -6,17 +6,17 @@ Data engineer challenge, insight
 Last edit: 2/10/2018 19:17 EST
 """
 # =============================================================================
-# Package numpy is used to calculate the percentile
+# The package numpy is used to calculate the percentile
 # =============================================================================
 import numpy as np
 
 # =============================================================================
-# Package sys is used to take the environment argument as input
+# The package sys is used to take the environment arguments as input
 # =============================================================================
 import sys
 
 # =============================================================================
-# Package os is used to remove the dummy file generated in the process
+# The package os is used to remove the dummy file (filtered data file) generated in the process
 # =============================================================================
 import os
 
@@ -32,13 +32,13 @@ if len(sys.argv)<=1:
     exit
 
 # =============================================================================
-# First step, clean up the data, discard the useless information. 
+# First step, filter the data, discard the useless information. 
 # Save the revised data into the file itcont_short.txt.
 # The variables I keep include:
 #   1. CMT_ID
 #   2. Name
-#   3. Zip_code
-#   4. Transaction_DT
+#   3. Zip_code: larger than 5 digits
+#   4. Transaction_DT: 8 digits format
 #   5. Transaction_AMT
 # Only the data with an "Empty" Other_ID will be recorded.
 # =============================================================================
@@ -57,7 +57,7 @@ f_cat.close()
 
 
 # =============================================================================
-# Second step, read the input of the percentile
+# Second step, read the input value of the percentile
 # =============================================================================
 
 f=open(sys.argv[2],'r')
@@ -80,9 +80,15 @@ f_repeat=open(sys.argv[3],"a")
 # considered as a repeat donor.
 # =============================================================================
 d_rec={}  #all the records, streame through the name and zip code. 
-#A dictionary with key: name+zip_code, value: year
-data_point={""} #A set registers the combination of CMT-ID, zip code and year
-d={} #a dictionary stores the data of the information to generate outputs
+#A dictionary with key: name+zip_code, value: year. It is used to confirm that 
+# the data point has a repeat ID (name + zip) and the year is in order (not from 
+# earlier calendar years).
+data_point={""} #A set registers the combination of CMT-ID, zip code and year. It
+# is in a format of the output.
+d={} # This dictionary stores the data of the information to generate outputs. The
+# key is the "label" (CMT_ID+zip+year). The value of each key is a list of the
+# amount of donations from the repeat donors. This list is used to calculate the
+# percentile value.
 label=""
 line=""
 date=""
@@ -101,7 +107,7 @@ for line in f_cat: #stream through all the data in the short version file
                 output=label+"|"+\
                 str(np.percentile(d[label],perc,interpolation="nearest"))+\
                 "|"+str(sum(d[label]))+"|"+str(len(d[label]))
-                f_repeat.write(output+"\n")
+                f_repeat.write(output+"\n") #output the data
             else:
                 output=label+"|"+x[4].rstrip()+"|"+x[4].rstrip()+"|"+"1"
                 d.update({label:[int(x[4].rstrip())]})
@@ -115,5 +121,5 @@ for line in f_cat: #stream through all the data in the short version file
 f_cat.close()
 f_repeat.close()
 del d,x, data_point,date, label, line, output, perc, year, d_rec #delete the variables in memory
-os.remove("itcont_short.txt") # remove the short version data file
+os.remove("itcont_short.txt") # remove the filtered version of the data file
 
