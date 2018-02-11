@@ -1,6 +1,6 @@
 # Donation Analytics
 
-Determine the total dollars received, total number of contributions received and donation amount in a given percentile of repeat donators. 
+Determine the total dollars received, the total number of contributions received and donation amount in a given percentile of repeat donators. 
 The project is implemented using Python and has been tested successfully in Ubuntu 14.04 with Python 2.7.
 
 I used FEC data, and interestingly I found that some individual donations are negative. Because this issue is not mentioned in the description of the challenge, I didn't take any extra actions towards these data.  
