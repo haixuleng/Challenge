@@ -44,7 +44,7 @@ if len(sys.argv)<=1:
 # =============================================================================
 
 f=open(sys.argv[1],'r')
-f_cat=open("itcont_short.txt","a")
+f_cat=open("itcont_short.txt","w+")
 for line in f:
     if line !="\n":
         x = line.split("|")
@@ -71,7 +71,7 @@ perc=int(x.rstrip())
 # =============================================================================
 
 f_cat=open("itcont_short.txt","r")
-f_repeat=open(sys.argv[3],"a")
+f_repeat=open(sys.argv[3],"w+")
 #f_repeat=open("repeat_donors.txt","a")
 
 # =============================================================================
